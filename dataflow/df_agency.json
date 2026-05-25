@@ -1,0 +1,50 @@
+{
+	"name": "df_agency",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "agency_csv_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "dfagency"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "sql_agency_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "agencysink"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          AgencyID as string,",
+				"          AgencyName as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> dfagency",
+				"dfagency sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          AgencyID as string,",
+				"          AgencyName as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> agencysink"
+			]
+		}
+	}
+}
